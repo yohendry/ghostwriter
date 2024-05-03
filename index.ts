@@ -3,8 +3,13 @@ import { ChatOllama } from "@langchain/community/chat_models/ollama";
 import titleGeneratorPromp from "./prompts/titleGenerator";
 import summaryPrompt from "./prompts/generateSummary";
 import tocPrompt from "./prompts/generateTOC";
+import generateSectionPrompt from "./prompts/generateSectionContent";
+
 import { z } from "zod";
 import { StructuredOutputParser } from "langchain/output_parsers";
+
+import fs from "fs";
+import { slug } from "./libs/slug";
 
 const url = process.env.OLLAMA_URL;
 const modelName = process.env.OLLAMA_MODEL;
@@ -42,9 +47,7 @@ async function main() {
     title: "Migrate Drupal 7 to Drupal 10",
   });
 
-  console.log(titleResult);
   const jsonTitles = titleResult;
-  console.log(jsonTitles);
 
   // TODO: preguntar por seleccionar titulo
   const titleIndex = 0;
@@ -52,6 +55,27 @@ async function main() {
 
   console.log(title);
 
+  if (!fs.existsSync("./generated"))
+    fs.mkdir("./generated", (error) => {
+      console.error(error);
+      process.exit(1);
+    });
+
+  await fs.writeFile(
+    "./generated/title.json",
+    JSON.stringify(title),
+    "utf-8",
+    (error) => {
+      console.error(error);
+    },
+  );
+
+  const titleStr = title.title ? title.title : "post title";
+  const mdFilePAth = `./generated/${slug(titleStr)}.md`;
+
+  await fs.writeFile(mdFilePAth, `# ${titleStr}\n\n`, "utf-8", (error) => {
+    console.error(error);
+  });
   // get post summary
 
   const partialedSummaryPrompt = await summaryPrompt.partial({
@@ -66,6 +90,24 @@ async function main() {
 
   console.log(summaryResult);
 
+  await fs.writeFile(
+    "./generated/summary.json",
+    JSON.stringify(summaryResult),
+    "utf-8",
+    (error) => {
+      console.error(error);
+    },
+  );
+
+  await fs.appendFile(
+    mdFilePAth,
+    `## TL;DR\n${summaryResult.summary}\n\n`,
+    "utf-8",
+    (error) => {
+      console.error(error);
+    },
+  );
+
   // get TOC
 
   const partialedTocPrompt = await tocPrompt.partial({
@@ -78,19 +120,38 @@ async function main() {
 
   console.log(tocResult);
 
+  await fs.writeFile(
+    "./generated/toc.json",
+    JSON.stringify(tocResult),
+    "utf-8",
+    (error) => {
+      console.error(error);
+    },
+  );
+
   // generate content
+  //
+  const contentChain = generateSectionPrompt.pipe(model);
+
+  tocResult.forEach(async (section) => {
+    const result = await contentChain.invoke({
+      title: section.title,
+      summary: section.summary,
+      keywords: section.keywords,
+    });
+
+    console.log(result.content);
+    console.log("\n\n\n");
+
+    await fs.appendFile(
+      mdFilePAth,
+      `${result.content}\n\n`,
+      "utf-8",
+      (error) => {
+        console.error(error);
+      },
+    );
+  });
 }
 
 main();
-
-/*
-  Thank you for your question! I'm happy to help. However, I must point out that the phrase "I love programming" is not grammatically correct in German. The word "love" does not have a direct translation in German, and it would be more appropriate to say "I enjoy programming" or "I am passionate about programming."
-
-  In German, you can express your enthusiasm for something like this:
-
-  * Ich möchte Programmieren (I want to program)
-  * Ich mag Programmieren (I like to program)
-  * Ich bin passioniert über Programmieren (I am passionate about programming)
-
-  I hope this helps! Let me know if you have any other questions.
-*/
