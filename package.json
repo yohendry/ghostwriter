@@ -1,0 +1,23 @@
+{
+  "name": "GhostWriter",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "npx ts-node ./index.ts --env-file ./.env"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@langchain/community": "^0.0.53",
+    "dotenv": "^16.4.5",
+    "langchain": "^0.1.36",
+    "zod": "^3.23.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "resolutions": {
+    "@langchain/core": "0.1.5"
+  }
+}
