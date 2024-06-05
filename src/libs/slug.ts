@@ -1,12 +1,13 @@
 // kindacode.com
-export function slug(title: string, glue: string = "-") {
-  let slug;
+export function slug(title: string, glue = "-") {
+  let slug = "";
 
   // convert to lower case
   slug = title.toLowerCase();
 
   // remove special characters
   slug = slug.replace(
+    //eslint-disable-next-line
     /\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi,
     "",
   );
@@ -16,13 +17,13 @@ export function slug(title: string, glue: string = "-") {
   slug = slug.replace(/ /gi, glue);
 
   // remove consecutive dash symbols
-  slug = slug.replace(/\-\-\-\-\-/gi, glue);
-  slug = slug.replace(/\-\-\-\-/gi, glue);
-  slug = slug.replace(/\-\-\-/gi, glue);
-  slug = slug.replace(/\-\-/gi, glue);
+  slug = slug.replace(/\-\-\-\-\-/gi, glue); /* eslint-disable-line */
+  slug = slug.replace(/\-\-\-\-/gi, glue); /* eslint-disable-line */
+  slug = slug.replace(/\-\-\-/gi, glue); /* eslint-disable-line */
+  slug = slug.replace(/\-\-/gi, glue); /* eslint-disable-line */
 
   // remove the unwanted dash symbols at the beginning and the end of the slug
-  slug = "@" + slug + "@";
-  slug = slug.replace(/\@\-|\-\@|\@/gi, "");
+  slug = `@${slug}@`;
+  slug = slug.replace(/\@\-|\-\@|\@/gi, ""); /* eslint-disable-line */
   return slug;
 }

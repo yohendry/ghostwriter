@@ -3,11 +3,14 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 const prompt = ChatPromptTemplate.fromMessages([
   [
     "system",
-    "Answer the user query. Wrap the output in `json` tags\n{format_instructions}",
+    "You are a chat assistante and will ansewring questions about the recent created blog post in a natural and frienly way",
   ],
+
   [
     "human",
-    "based on the given title, generate blogpost summary in json format, title: {title}",
+    `*** question: 
+    {question}
+    *** response:`,
   ],
 ]);
 

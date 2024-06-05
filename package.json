@@ -2,19 +2,38 @@
   "name": "GhostWriter",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "npx ts-node ./index.ts --env-file ./.env"
+    "start": "npx tsx ./src/index.ts",
+    "serve": "npx tsx ./src/server.ts",
+    "check": "npx @biomejs/biome check --apply ./src",
+    "lint": "npx @biomejs/biome lint --apply ./src",
+    "format": "npx @biomejs/biome format --write ./src",
+    "build": "npx tsc"
   },
   "engines": {
     "node": ">=18"
   },
   "dependencies": {
     "@langchain/community": "^0.0.53",
+    "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "langchain": "^0.1.36",
+    "progress": "^2.0.3",
+    "prompts": "^2.4.2",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
     "zod": "^3.23.5"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.7.2",
+    "@tsconfig/recommended": "^1.0.6",
+    "@types/progress": "^2.0.7",
+    "@types/prompts": "^2.4.9",
+    "@types/socket.io-client": "^3.0.0",
+    "i": "^0.3.7",
+    "npm": "^10.7.0",
     "typescript": "^5.4.5"
   },
   "resolutions": {

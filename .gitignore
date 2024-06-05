@@ -1,4 +1,8 @@
+.git
 node_modules/
 package-lock.json
+dist
 generated/
 .DS_Store
+.env
+tsconfig.tsbuildinfo
